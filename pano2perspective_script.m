@@ -8,7 +8,7 @@ rota_x = importdata('../metadata/streetlearn_x.txt', ' ', 0);
 rota_y = importdata('../metadata/streetlearn_y.txt', ' ', 0);
 rota_index = importdata('../metadata/streetlearn_index.txt', ' ', 0);
 % from pano to perspective image
-for i = 34:34
+for i = 1:length(panoids)
     pano_id = panoids(i);
     pano_id = pano_id{1};
     x = rota_x(i, :);
