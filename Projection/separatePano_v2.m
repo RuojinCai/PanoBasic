@@ -1,4 +1,4 @@
-function [sepScene] = separatePano_v2( panoImg, fov, x, y, imgSize, saveDir)
+function [sepScene] = separatePano_v2( panoImg, fov, x, y, imgSize, saveDir, index)
 %SEPARATEPANO project a panorama image into several perspective views
 % panoImg: panorama image; fov: field of view;
 % x,y: view direction of center of perspective views, in UV expression
@@ -26,8 +26,8 @@ fprintf('%d\n', numScene)
 % imgSize = 2*f*tan(fov/2);
 % sepScene = zeros(imgSize, imgSize, 3, numScene);
 sepScene(numScene) = struct('img',[],'vx',[],'vy',[],'fov',[],'sz',[]);
-parfor i = 1:numScene %floor(numScene/2)
-    if isfile(sprintf('%s/%03d.png', saveDir, i))
+parfor i = 1:numScene
+    if isfile(sprintf('%s/%03d.png', saveDir, index(i)))
         continue;
     end
     warped_image = imgLookAt(panoImg, x(i), y(i), imgSize, fov(i));
@@ -43,14 +43,16 @@ if exist('saveDir', 'var')
         mkdir(saveDir);
     end
     for i = 1:numScene
-        if isfile(sprintf('%s/%03d.png', saveDir, i))
+        if isnan(index(i))
+            continue
+        end
+        if isfile(sprintf('%s/%03d.png', saveDir, index(i)))
             continue;
         end
-        imwrite(sepScene(i).img, sprintf('%s/%03d.png', saveDir, i), 'png');          
-    end
-    if ~isfile(sprintf('%s/x.txt', saveDir))
-        writematrix(x, sprintf('%s/x.txt', saveDir));
-        writematrix(y, sprintf('%s/y.txt', saveDir));
+        imwrite(sepScene(i).img, sprintf('%s/%03d.png', saveDir, index(i)), 'png');          
     end
     fprintf(' done\n');  
 end
+
+
+    
