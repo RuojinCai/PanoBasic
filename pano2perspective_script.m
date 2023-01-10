@@ -4,16 +4,19 @@ add_path;
 
 % set dataset file path
 panoids = importdata('../metadata/streetlearn_panoid.txt');
-rota_x = importdata('../metadata/streetlearn_x.txt', ' ', 0);
-rota_y = importdata('../metadata/streetlearn_y.txt', ' ', 0);
-rota_index = importdata('../metadata/streetlearn_index.txt', ' ', 0);
+fid_index=fopen('../metadata/streetlearn_index.txt'); 
+fid_x=fopen('../metadata/streetlearn_x.txt'); 
+fid_y=fopen('../metadata/streetlearn_y.txt'); 
 % from pano to perspective image
 for i = 1:length(panoids)
     pano_id = panoids(i);
     pano_id = pano_id{1};
-    x = rota_x(i, :);
-    y = rota_y(i, :);
-    index = rota_index(i, :);
+    index = textscan(fid_index,'%s',1,'delimiter','\n', 'headerlines',0);
+    index = str2num(index{1,1}{1,1});
+    x = textscan(fid_x,'%s',1,'delimiter','\n', 'headerlines',0);
+    x = str2num(x{1,1}{1,1});
+    y = textscan(fid_y,'%s',1,'delimiter','\n', 'headerlines',0);
+    y = str2num(y{1,1}{1,1});
     
     % set save path
     saveDir = sprintf('../data/streetlearn/%s', pano_id); 
